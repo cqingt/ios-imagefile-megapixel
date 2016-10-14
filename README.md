@@ -1,5 +1,29 @@
 # Mega pixel image rendering library for iOS6 Safari
 
+# 前端图片上传压缩
+
+# twitter 图片上传逻辑：
+
+//将canvas转为 blob 前端压缩图片上传
+	function convertCanvasToBlob(canvas) {
+			var format = "image/jpeg";
+			var base64 = canvas.toDataURL(format);
+			var code = window.atob(base64.split(",")[1]);
+			var aBuffer = new window.ArrayBuffer(code.length);
+			var uBuffer = new window.Uint8Array(aBuffer);
+			for(var i = 0; i < code.length; i++){
+				uBuffer[i] = code.charCodeAt(i);
+			}
+			var Builder = window.WebKitBlobBuilder || window.MozBlobBuilder;
+			if(Builder){
+				var builder = new Builder;
+				builder.append(buffer);
+				return builder.getBlob(format);
+			} else {
+				return new window.Blob([ buffer ], {type: format});
+			}
+		}
+
 Fixes iOS6 Safari's image file rendering issue for large size image (over mega-pixel), which causes unexpected subsampling when drawing it in canvas.
 By using this library, you can safely render the image with proper stretching.
 
